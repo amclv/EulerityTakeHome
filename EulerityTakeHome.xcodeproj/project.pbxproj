@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1AB48ED62630A25700F0D72F /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48ED52630A25700F0D72F /* HomeViewController.swift */; };
 		1AFAF97326309FD700BD55C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFAF97226309FD700BD55C9 /* AppDelegate.swift */; };
 		1AFAF97526309FD700BD55C9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFAF97426309FD700BD55C9 /* SceneDelegate.swift */; };
 		1AFAF97C26309FD800BD55C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AFAF97B26309FD800BD55C9 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1AB48ED52630A25700F0D72F /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		1AFAF96F26309FD700BD55C9 /* EulerityTakeHome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EulerityTakeHome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AFAF97226309FD700BD55C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1AFAF97426309FD700BD55C9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				1AFAF98726309FE400BD55C9 /* Resources */,
+				1AB48ED52630A25700F0D72F /* HomeViewController.swift */,
 			);
 			path = EulerityTakeHome;
 			sourceTree = "<group>";
@@ -140,6 +143,7 @@
 			files = (
 				1AFAF97326309FD700BD55C9 /* AppDelegate.swift in Sources */,
 				1AFAF97526309FD700BD55C9 /* SceneDelegate.swift in Sources */,
+				1AB48ED62630A25700F0D72F /* HomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +285,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7G4A2JWWKQ;
 				INFOPLIST_FILE = "$(SRCROOT)/EulerityTakeHome/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -300,6 +305,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7G4A2JWWKQ;
 				INFOPLIST_FILE = "$(SRCROOT)/EulerityTakeHome/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
