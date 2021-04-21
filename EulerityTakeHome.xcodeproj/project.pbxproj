@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		1AFAF97326309FD700BD55C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFAF97226309FD700BD55C9 /* AppDelegate.swift */; };
 		1AFAF97526309FD700BD55C9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFAF97426309FD700BD55C9 /* SceneDelegate.swift */; };
-		1AFAF97726309FD700BD55C9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFAF97626309FD700BD55C9 /* ViewController.swift */; };
-		1AFAF97A26309FD700BD55C9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AFAF97826309FD700BD55C9 /* Main.storyboard */; };
 		1AFAF97C26309FD800BD55C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AFAF97B26309FD800BD55C9 /* Assets.xcassets */; };
 		1AFAF97F26309FD800BD55C9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AFAF97D26309FD800BD55C9 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -19,8 +17,6 @@
 		1AFAF96F26309FD700BD55C9 /* EulerityTakeHome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EulerityTakeHome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AFAF97226309FD700BD55C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1AFAF97426309FD700BD55C9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		1AFAF97626309FD700BD55C9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		1AFAF97926309FD700BD55C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1AFAF97B26309FD800BD55C9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1AFAF97E26309FD800BD55C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1AFAF98026309FD800BD55C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -56,15 +52,21 @@
 		1AFAF97126309FD700BD55C9 /* EulerityTakeHome */ = {
 			isa = PBXGroup;
 			children = (
+				1AFAF98726309FE400BD55C9 /* Resources */,
+			);
+			path = EulerityTakeHome;
+			sourceTree = "<group>";
+		};
+		1AFAF98726309FE400BD55C9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				1AFAF97226309FD700BD55C9 /* AppDelegate.swift */,
 				1AFAF97426309FD700BD55C9 /* SceneDelegate.swift */,
-				1AFAF97626309FD700BD55C9 /* ViewController.swift */,
-				1AFAF97826309FD700BD55C9 /* Main.storyboard */,
 				1AFAF97B26309FD800BD55C9 /* Assets.xcassets */,
 				1AFAF97D26309FD800BD55C9 /* LaunchScreen.storyboard */,
 				1AFAF98026309FD800BD55C9 /* Info.plist */,
 			);
-			path = EulerityTakeHome;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,7 +128,6 @@
 			files = (
 				1AFAF97F26309FD800BD55C9 /* LaunchScreen.storyboard in Resources */,
 				1AFAF97C26309FD800BD55C9 /* Assets.xcassets in Resources */,
-				1AFAF97A26309FD700BD55C9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,7 +138,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AFAF97726309FD700BD55C9 /* ViewController.swift in Sources */,
 				1AFAF97326309FD700BD55C9 /* AppDelegate.swift in Sources */,
 				1AFAF97526309FD700BD55C9 /* SceneDelegate.swift in Sources */,
 			);
@@ -146,14 +146,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		1AFAF97826309FD700BD55C9 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1AFAF97926309FD700BD55C9 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		1AFAF97D26309FD800BD55C9 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -288,7 +280,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7G4A2JWWKQ;
-				INFOPLIST_FILE = EulerityTakeHome/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/EulerityTakeHome/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -307,7 +299,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7G4A2JWWKQ;
-				INFOPLIST_FILE = EulerityTakeHome/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/EulerityTakeHome/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
