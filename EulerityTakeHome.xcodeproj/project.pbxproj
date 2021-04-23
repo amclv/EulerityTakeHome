@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1AB48ED62630A25700F0D72F /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48ED52630A25700F0D72F /* HomeViewController.swift */; };
+		1AA8C4792632702800AC4235 /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4782632702800AC4235 /* PhotosCollectionViewCell.swift */; };
+		1AB48ED62630A25700F0D72F /* FilterImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48ED52630A25700F0D72F /* FilterImageViewController.swift */; };
+		1AB48EDB2630A59E00F0D72F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48EDA2630A59E00F0D72F /* NetworkManager.swift */; };
+		1AB48EDE2630A81400F0D72F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48EDD2630A81400F0D72F /* Image.swift */; };
+		1AB48EEB2630E05D00F0D72F /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48EEA2630E05D00F0D72F /* ImageCollectionViewCell.swift */; };
+		1AB48EEF26313EE100F0D72F /* ImageCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48EEE26313EE100F0D72F /* ImageCollectionViewController.swift */; };
+		1AB48EF326314B2C00F0D72F /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48EF226314B2C00F0D72F /* UIImage+Extension.swift */; };
 		1AFAF97326309FD700BD55C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFAF97226309FD700BD55C9 /* AppDelegate.swift */; };
 		1AFAF97526309FD700BD55C9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFAF97426309FD700BD55C9 /* SceneDelegate.swift */; };
 		1AFAF97C26309FD800BD55C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AFAF97B26309FD800BD55C9 /* Assets.xcassets */; };
@@ -15,7 +21,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1AB48ED52630A25700F0D72F /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		1AA8C4782632702800AC4235 /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
+		1AB48ED52630A25700F0D72F /* FilterImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterImageViewController.swift; sourceTree = "<group>"; };
+		1AB48EDA2630A59E00F0D72F /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		1AB48EDD2630A81400F0D72F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		1AB48EEA2630E05D00F0D72F /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		1AB48EEE26313EE100F0D72F /* ImageCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewController.swift; sourceTree = "<group>"; };
+		1AB48EF226314B2C00F0D72F /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		1AFAF96F26309FD700BD55C9 /* EulerityTakeHome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EulerityTakeHome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AFAF97226309FD700BD55C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1AFAF97426309FD700BD55C9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -35,6 +47,64 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1AA8C47D26329EDF00AC4235 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1AB48EF226314B2C00F0D72F /* UIImage+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1AB48EE02630A82000F0D72F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1AB48EDD2630A81400F0D72F /* Image.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1AB48EE32630A82B00F0D72F /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				1AB48EDA2630A59E00F0D72F /* NetworkManager.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		1AB48EE52630A83300F0D72F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1AB48EE72630A87000F0D72F /* View Controllers */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		1AB48EE72630A87000F0D72F /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1AB48ED52630A25700F0D72F /* FilterImageViewController.swift */,
+				1AB48EEE26313EE100F0D72F /* ImageCollectionViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		1AB48EE92630E04700F0D72F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1AB48EEA2630E05D00F0D72F /* ImageCollectionViewCell.swift */,
+				1AA8C4782632702800AC4235 /* PhotosCollectionViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1AB48EF126314B1E00F0D72F /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				1AA8C47D26329EDF00AC4235 /* Extensions */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		1AFAF96626309FD700BD55C9 = {
 			isa = PBXGroup;
 			children = (
@@ -54,8 +124,12 @@
 		1AFAF97126309FD700BD55C9 /* EulerityTakeHome */ = {
 			isa = PBXGroup;
 			children = (
+				1AB48EF126314B1E00F0D72F /* Utilities */,
+				1AB48EE92630E04700F0D72F /* Views */,
+				1AB48EE32630A82B00F0D72F /* Networking */,
+				1AB48EE02630A82000F0D72F /* Model */,
 				1AFAF98726309FE400BD55C9 /* Resources */,
-				1AB48ED52630A25700F0D72F /* HomeViewController.swift */,
+				1AB48EE52630A83300F0D72F /* Controllers */,
 			);
 			path = EulerityTakeHome;
 			sourceTree = "<group>";
@@ -141,9 +215,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AB48EEF26313EE100F0D72F /* ImageCollectionViewController.swift in Sources */,
+				1AB48EEB2630E05D00F0D72F /* ImageCollectionViewCell.swift in Sources */,
+				1AA8C4792632702800AC4235 /* PhotosCollectionViewCell.swift in Sources */,
+				1AB48EDB2630A59E00F0D72F /* NetworkManager.swift in Sources */,
+				1AB48EF326314B2C00F0D72F /* UIImage+Extension.swift in Sources */,
 				1AFAF97326309FD700BD55C9 /* AppDelegate.swift in Sources */,
 				1AFAF97526309FD700BD55C9 /* SceneDelegate.swift in Sources */,
-				1AB48ED62630A25700F0D72F /* HomeViewController.swift in Sources */,
+				1AB48ED62630A25700F0D72F /* FilterImageViewController.swift in Sources */,
+				1AB48EDE2630A81400F0D72F /* Image.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
