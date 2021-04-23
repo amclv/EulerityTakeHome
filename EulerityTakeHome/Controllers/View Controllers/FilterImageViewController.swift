@@ -12,7 +12,6 @@ class FilterImageViewController: UIViewController {
     
     // MARK: - Properties -
     let sliderSize: CGFloat = 200
-    let standardPadding: CGFloat = 20
     let thumbnailSize: CGFloat = 80
     
     var aCIImage = CIImage();
@@ -20,19 +19,7 @@ class FilterImageViewController: UIViewController {
     var outputImage = CIImage();
     var newUIImage = UIImage();
     
-    lazy var photoCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: thumbnailSize, height: thumbnailSize)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: PhotosCollectionViewCell.identifier)
-        collectionView.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }()
-    
+    // MARK: - ImageViews -
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +27,56 @@ class FilterImageViewController: UIViewController {
         return imageView
     }()
     
+    // MARK: - Labels -
+    let brightnessLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Brightness"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let contrastLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Contrast"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let saturationLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Saturation"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    lazy var brightnessValueLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "\(brightnessSlider.value)"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    lazy var contrastValueLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "\(contrastSlider.value)"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    lazy var saturationValueLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "\(saturationSlider.value)"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    // MARK: - Sliders -
     lazy var brightnessSlider: UISlider = {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
@@ -79,6 +116,7 @@ class FilterImageViewController: UIViewController {
         return slider
     }()
     
+    // MARK: - StackViews -
     let sliderHStack: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -86,6 +124,33 @@ class FilterImageViewController: UIViewController {
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
         return stackView
+    }()
+    
+    let brightnessStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.alignment = .fill
+        stack.distribution = .equalSpacing
+        stack.spacing = 20
+        return stack
+    }()
+    
+    let contrastStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.alignment = .fill
+        stack.distribution = .equalSpacing
+        stack.spacing = 20
+        return stack
+    }()
+    
+    let saturationStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.alignment = .fill
+        stack.distribution = .equalSpacing
+        stack.spacing = 20
+        return stack
     }()
 
     // MARK: - Lifecycle -
@@ -95,20 +160,16 @@ class FilterImageViewController: UIViewController {
         
         navigationItem.title = "Edit Image"
         constraints()
-        delegates()
         
         let aUIImage = imageView.image
         let aCGImage = aUIImage?.cgImage
         aCIImage = CIImage(cgImage: aCGImage!)
         context = CIContext(options: nil);
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveImage))
     }
     
     // MARK: - Helper Functions -
-    func delegates() {
-        photoCollectionView.delegate = self
-        photoCollectionView.dataSource = self
-    }
-    
     func sliderControls(filter: CIFilter, key: String, sender: UISlider) {
         filter.setValue(NSNumber(value: sender.value), forKey: key)
         outputImage = filter.outputImage!
@@ -123,6 +184,7 @@ class FilterImageViewController: UIViewController {
         let brightnessFilter: CIFilter!
         brightnessFilter = CIFilter(name: "CIColorControls")
         brightnessFilter.setValue(aCIImage, forKey: "inputImage")
+        brightnessValueLabel.text = "\(brightnessSlider.value)"
         sliderControls(filter: brightnessFilter, key: "inputBrightness", sender: sender)
     }
     
@@ -130,6 +192,7 @@ class FilterImageViewController: UIViewController {
         let contrastFilter: CIFilter!
         contrastFilter = CIFilter(name: "CIColorControls")
         contrastFilter.setValue(aCIImage, forKey: "inputImage")
+        contrastValueLabel.text = "\(contrastSlider.value)"
         sliderControls(filter: contrastFilter, key: "inputContrast", sender: sender)
     }
     
@@ -137,7 +200,12 @@ class FilterImageViewController: UIViewController {
         let saturationFilter: CIFilter!
         saturationFilter = CIFilter(name: "CIColorControls")
         saturationFilter.setValue(aCIImage, forKey: "inputImage")
+        saturationValueLabel.text = "\(saturationSlider.value)"
         sliderControls(filter: saturationFilter, key: "inputSaturation", sender: sender)
+    }
+    
+    @objc func saveImage() {
+        
     }
 }
 
@@ -146,24 +214,31 @@ extension FilterImageViewController {
     private func constraints() {
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: standardPadding),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageView.heightAnchor.constraint(equalToConstant: view.frame.height / 2.5),
             imageView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
         
-        view.addSubview(photoCollectionView)
-        NSLayoutConstraint.activate([
-            photoCollectionView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: standardPadding),
-            photoCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            photoCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            photoCollectionView.heightAnchor.constraint(equalToConstant: 100)
-        ])
+        brightnessStack.addArrangedSubview(brightnessValueLabel)
+        brightnessStack.addArrangedSubview(brightnessSlider)
+        brightnessStack.addArrangedSubview(brightnessLabel)
+        view.addSubview(brightnessStack)
+                
+        contrastStack.addArrangedSubview(contrastValueLabel)
+        contrastStack.addArrangedSubview(contrastSlider)
+        contrastStack.addArrangedSubview(contrastLabel)
+        view.addSubview(contrastStack)
         
-        sliderHStack.addArrangedSubview(brightnessSlider)
-        sliderHStack.addArrangedSubview(contrastSlider)
-        sliderHStack.addArrangedSubview(saturationSlider)
+        saturationStack.addArrangedSubview(saturationValueLabel)
+        saturationStack.addArrangedSubview(saturationSlider)
+        saturationStack.addArrangedSubview(saturationLabel)
+        view.addSubview(saturationStack)
+        
+        sliderHStack.addArrangedSubview(brightnessStack)
+        sliderHStack.addArrangedSubview(contrastStack)
+        sliderHStack.addArrangedSubview(saturationStack)
         view.addSubview(sliderHStack)
         NSLayoutConstraint.activate([
             sliderHStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -standardPadding),
@@ -171,29 +246,9 @@ extension FilterImageViewController {
             sliderHStack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             sliderHStack.heightAnchor.constraint(equalToConstant: sliderSize)
         ])
+        
+        
     }
-}
-
-extension FilterImageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.identifier, for: indexPath) as! PhotosCollectionViewCell
-        cell.thumbnailImageView.image = imageView.image
-        cell.layer.cornerRadius = 10
-        return cell
-    }
-    
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        // Took away the leading and trailing constraint on the collectionview itself. added an edge inset here to give a better look to the view.
-        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-    }
-    
 }
 
 extension FilterImageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {}

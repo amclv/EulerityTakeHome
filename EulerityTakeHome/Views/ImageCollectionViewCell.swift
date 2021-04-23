@@ -11,6 +11,8 @@ class ImageCollectionViewCell: UICollectionViewCell {
     
     static var identifier: String = "ImageCollectionViewCell"
     
+    let imageSize: CGFloat = 150
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -32,8 +34,8 @@ class ImageCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: self.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 200),
-            imageView.widthAnchor.constraint(equalToConstant: 200)
+            imageView.heightAnchor.constraint(equalToConstant: imageSize),
+            imageView.widthAnchor.constraint(equalToConstant: imageSize)
         ])
     }
 }

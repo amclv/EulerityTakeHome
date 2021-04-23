@@ -8,7 +8,5 @@
 import Foundation
 
 struct Image: Codable {
-    var url: String?
-    var created: String?
-    var updated: String?
+    var url: URL?
 }
