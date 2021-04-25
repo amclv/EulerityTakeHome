@@ -149,7 +149,7 @@ extension ImageCollectionViewController: UICollectionViewDataSource, UICollectio
         let image = networkManager.getImage(url: imageURL[indexPath.item])
         let originalImageURL = networkManager.originalImageURL[indexPath.item]
         filterImageViewController.originalImageView.image = image
-//        filterImageViewController.imageURL = originalImageURL.url
+        filterImageViewController.imageURL = originalImageURL.url
         navigationController?.pushViewController(filterImageViewController, animated: true)
     }
 }
