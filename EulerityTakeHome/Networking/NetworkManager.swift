@@ -38,9 +38,7 @@ class NetworkManager {
             guard let response = response else {
                 let error = NSError(domain: "\(#file).\(#function)",
                                     code: 999,
-                                    userInfo: [NSLocalizedDescriptionKey: "invalid response"])
-                
-                print("invalid response in \(#function)")
+                                    userInfo: [NSLocalizedDescriptionKey: "Response Invalid"])
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
@@ -50,9 +48,7 @@ class NetworkManager {
             guard response.statusCode < 400 else {
                 let error = NSError(domain: "\(#file).\(#function)",
                                     code: 999,
-                                    userInfo: [NSLocalizedDescriptionKey: "invalid response: \(response.statusCode), \(String(data: data ?? Data(), encoding: .utf8))"])
-                
-                print("invalid response code in \(#function): \(response.statusCode)")
+                                    userInfo: [NSLocalizedDescriptionKey: response.statusCode])
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
@@ -62,8 +58,7 @@ class NetworkManager {
             guard let data = data else {
                 let error = NSError(domain: "\(#file). \(#function)",
                                     code: 999,
-                                    userInfo: [NSLocalizedDescriptionKey: "No Data Received: \(response.statusCode)"])
-                print("No Data: \(#function)")
+                                    userInfo: [NSLocalizedDescriptionKey: response.statusCode])
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
@@ -96,9 +91,7 @@ class NetworkManager {
             guard let response = response else {
                 let error = NSError(domain: "\(#file).\(#function)",
                                     code: 999,
-                                    userInfo: [NSLocalizedDescriptionKey: "invalid response"])
-                
-                print("invalid response in \(#function)")
+                                    userInfo: [NSLocalizedDescriptionKey: "Response Invalid"])
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
@@ -108,9 +101,7 @@ class NetworkManager {
             guard response.statusCode < 400 else {
                 let error = NSError(domain: "\(#file).\(#function)",
                                     code: 999,
-                                    userInfo: [NSLocalizedDescriptionKey: "invalid response: \(response.statusCode), \(String(data: data ?? Data(), encoding: .utf8))"])
-                
-                print("invalid response code in \(#function): \(response.statusCode)")
+                                    userInfo: [NSLocalizedDescriptionKey: response.statusCode])
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
@@ -120,9 +111,7 @@ class NetworkManager {
             guard let data = data else {
                 let error = NSError(domain: "\(#file).\(#function)",
                                     code: response.statusCode,
-                                    userInfo: [NSLocalizedDescriptionKey: "No Data Received: \(response.statusCode)"])
-                
-                print("no data received in \(#function)")
+                                    userInfo: [NSLocalizedDescriptionKey: response.statusCode])
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
@@ -141,115 +130,123 @@ class NetworkManager {
     }
     
     // MARK: - Upload Methods -
-    func uploadImage(imageData: Data, completion: @escaping (Result<Void, Error>) -> Void = { _ in }) {
-            fetchUploadURL { [unowned self] result in
-                switch result {
-                case .success(let url):
-                    guard let url = url else {
-                        let error = NSError(domain: #function, code: 999, userInfo: [NSLocalizedDescriptionKey: "unable to get valid URL to upload file with"])
-                        completion(.failure(error))
-                        return
-                    }
-                    self.uploadImage(data: imageData, to: url, completion: completion)
-                case .failure(let error):
+    func uploadImage(imageData: Data, imageURL: URL, completion: @escaping (Result<Void, Error>) -> Void = { _ in }) {
+        fetchUploadURL { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let url):
+                guard let url = url else {
+                    let error = NSError(domain: #function,
+                                        code: 999,
+                                        userInfo: [NSLocalizedDescriptionKey: "No valid URL to upload file"])
+                    completion(.failure(error))
+                    return
+                }
+                self.uploadImage(data: imageData,
+                                 imageURL: imageURL,
+                                 to: url,
+                                 completion: completion)
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    // MARK: - Multipart Upload -
+    private func uploadImage(data: Data, imageURL: URL, to url: URL, completion: @escaping (Result<Void, Error>) -> Void = { _ in }) {
+        let boundary = "Boundary-\(UUID().uuidString)"
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        let body = NSMutableData()
+        body.append(convertFileData(email: "toscleveland@gmail.com",
+                                    imageURL: imageURL,
+                                    mimeType: "image/png",
+                                    fileData: data,
+                                    using: boundary))
+        request.httpBody = body as Data
+        
+        URLSession.shared.loadData(using: request) { (data, response, error) in
+            guard error == nil else {
+                completion(.failure(error!))
+                return
+            }
+            
+            guard let response = response else {
+                let error = NSError(domain: "\(#file).\(#function)",
+                                    code: 999,
+                                    userInfo: [NSLocalizedDescriptionKey: "Response Invalid"])
+                DispatchQueue.main.async {
                     completion(.failure(error))
                 }
-            }
-        }
-        
-        // MARK: - MultiPart Upload -
-        private func uploadImage(data: Data, to url: URL, completion: @escaping (Result<Void, Error>) -> Void = { _ in }) {
-            var request = URLRequest(url: url)
-            request.httpMethod = HTTPMethod.post.rawValue
-
-            let boundary = "Boundary-\(UUID().uuidString)"
-            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-            
-            let body = NSMutableData()
-            body.append(convertFileData(emailAddress: "toscleveland@gmail.com", originalUrl: url, mimeType: "image/png", fileData: data, using: boundary))
-            request.httpBody = body as Data
-            
-            URLSession.shared.loadData(using: request) { (data, response, error) in
-                guard error == nil else {
-                    completion(.failure(error!))
-                    return
-                }
-                
-                guard let response = response else {
-                    let error = NSError(domain: "\(#file).\(#function)",
-                                        code: 999,
-                                        userInfo: [NSLocalizedDescriptionKey: "invalid response"])
-                    
-                    print("invalid response in \(#function)")
-                    DispatchQueue.main.async {
-                        completion(.failure(error))
-                    }
-                    return
-                }
-                
-                guard response.statusCode < 400 else {
-                    let error = NSError(domain: "\(#file).\(#function)",
-                                        code: 999,
-                                        userInfo: [NSLocalizedDescriptionKey: "invalid response: \(response.statusCode), \(String(data: data ?? Data(), encoding: .utf8) ?? "")\nRequest: \(NSString(string: String(data: request.httpBody!, encoding: .ascii)!))"])
-                    
-                    print("invalid response code in \(#function): \(response.statusCode) \n\(NSString(string: String(data: request.httpBody!, encoding: .ascii)!))")
-                    DispatchQueue.main.async {
-                        completion(.failure(error))
-                    }
-                    return
-                }
-                
-                guard let data = data else {
-                    let error = NSError(domain: "\(#file).\(#function)",
-                                        code: response.statusCode,
-                                        userInfo: [NSLocalizedDescriptionKey: "No Data Received: \(response.statusCode)"])
-                    
-                    print("no data received in \(#function)")
-                    DispatchQueue.main.async {
-                        completion(.failure(error))
-                    }
-                    return
-                }
-                print(data)
-                
+                return
             }
             
+            guard response.statusCode < 400 else {
+                let error = NSError(domain: "\(#file).\(#function)",
+                                    code: 999,
+                                    userInfo: [NSLocalizedDescriptionKey: response.statusCode])
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+                return
+            }
+            
+            guard let data = data else {
+                let error = NSError(domain: "\(#file).\(#function)",
+                                    code: response.statusCode,
+                                    userInfo: [NSLocalizedDescriptionKey: response.statusCode])
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+                return
+            }
+            print(data)
         }
+    }
+    
+    func convertFileData(email: String, imageURL: URL, mimeType: String, fileData: Data, using boundary: String) -> Data {
+        let data = NSMutableData()
+        data.appendString("--\(boundary)")
+        data.appendString("\r\n")
+        data.appendString("Content-Disposition: form-data; name=\"appid\"")
+        data.appendString("\r\n")
+        data.appendString("\r\n")
         
-        func convertFileData(emailAddress: String, originalUrl: URL, mimeType: String, fileData: Data, using boundary: String) -> Data {
-            let data = NSMutableData()
-            // TODO: clean this up using convertFormField?
-            data.append(string: "--\(boundary)\r\n")
-            data.append(string: "Content-Disposition: form-data; name=\"appid\"\r\n")
-            data.append(string: emailAddress)
-            data.append(string:"\r\n")
-            
-            data.append(string: "--\(boundary)\r\n")
-            data.append(string: "Content-Disposition: form-data; name=\"original\"\r\n")
-            data.append(string: originalUrl.absoluteString)
-            data.append(string:"\r\n")
-            
-            data.append(string: "--\(boundary)\r\n")
-            data.append(string: "Content-Disposition: form-data; name=\"file\"; filename=\"file.png\"\r\n")
-            data.append(string: "Content-Type: \(mimeType)\r\n\r\n")
-            
-            data.append(fileData)
-            data.append(string:"\r\n")
-            data.append(string: "--\(boundary)--")
-            return data as Data
-        }
+        data.appendString(email)
+        data.appendString("\r\n")
         
-        private func convertFormField(named name: String, value: String, using boundary: String) -> String {
-            let fieldString =
-            """
-            --\(boundary)
-            Content-Disposition: form-data; name=\"\(name)\"
-
-            \(value)
-            
-            """
-            return fieldString
-        }
+        data.appendString("--\(boundary)")
+        data.appendString("\r\n")
+        data.appendString("Content-Disposition: form-data; name=\"original\"")
+        data.appendString("\r\n")
+        data.appendString("\r\n")
+        
+        data.appendString(imageURL.absoluteString)
+        data.appendString("\r\n")
+        
+        data.appendString("--\(boundary)")
+        data.appendString("\r\n")
+        data.appendString("Content-Disposition: form-data; name=\"file\"; filename=\"\(UUID().uuidString).png\"")
+        data.appendString("\r\n")
+        data.appendString("Content-Type: \(mimeType)")
+        data.appendString("\r\n")
+        data.appendString("\r\n")
+        
+        data.append(fileData)
+        data.appendString("\r\n")
+        data.appendString("--\(boundary)--")
+        return data as Data
+    }
+    
+    private func convertFormField(named name: String, value: String, using boundary: String) -> String {
+        var fieldString = "--\(boundary)"
+        fieldString += "Content-Disposition: form-data; name=\"\(name)\""
+        fieldString += "\(value)"
+        return fieldString
+    }
     
     // MARK: - Storage Operations -
     func cacheImageData(_ data: Data, for url: URL) {

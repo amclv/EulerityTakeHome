@@ -133,6 +133,8 @@ class FilterImageViewController: UIViewController {
         "CISepiaTone"
     ]
     
+    var imageURL: URL?
+    
     // MARK: - Lifecycle -
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -143,10 +145,14 @@ class FilterImageViewController: UIViewController {
         context = CIContext(options: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        configureScrollView()
+    }
+    
     // MARK: - Helper Functions -
     func configureUI() {
         constraints()
-        configureScrollView()
         delegates()
         view.backgroundColor = .white
         navigationItem.title = "Edit Image"
@@ -166,7 +172,7 @@ class FilterImageViewController: UIViewController {
         let y: CGFloat = 5
         let buttonWidth: CGFloat = 70
         let buttonHeight: CGFloat = 70
-        let gapBetweenButtons: CGFloat = 10
+        let gapBetweenButtons: CGFloat = 5
         
         var itemCount = 0
         
@@ -235,8 +241,10 @@ class FilterImageViewController: UIViewController {
     }
     
     @objc func saveImage() {
-        guard let image = originalImageView.image else { return }
-        networkManager.uploadImage(imageData: image.pngData()!)
+        guard let image = originalImageView.image,
+              let imageURL = imageURL else { return }
+        
+        networkManager.uploadImage(imageData: image.pngData()!, imageURL: imageURL)
     }
     
     @objc func filterButtonTapped(sender: UIButton) {

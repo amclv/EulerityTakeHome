@@ -25,9 +25,24 @@ extension URLSession {
 }
 
 extension NSMutableData {
-    func append(string: String) {
+    func appendString(_ string: String) {
         if let data = string.data(using: .utf8) {
             self.append(data)
+        }
+    }
+}
+
+extension UIViewController {
+    
+    /// Show an alert with a title, message, and OK button
+    /// - Parameters:
+    ///   - title: The Alert's Title
+    ///   - message: The Alert's Message
+    func presentAlert(title: String, message: String, completion: @escaping (UIAlertAction) -> Void = {_ in }) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: completion))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
         }
     }
 }
