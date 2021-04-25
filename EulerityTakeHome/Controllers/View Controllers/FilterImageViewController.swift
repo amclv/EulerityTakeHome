@@ -235,7 +235,8 @@ class FilterImageViewController: UIViewController {
     }
     
     @objc func saveImage() {
-        
+        guard let image = originalImageView.image else { return }
+        networkManager.uploadImage(imageData: image.pngData()!)
     }
     
     @objc func filterButtonTapped(sender: UIButton) {
