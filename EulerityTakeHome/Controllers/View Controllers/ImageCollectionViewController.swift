@@ -102,7 +102,8 @@ extension ImageCollectionViewController: UICollectionViewDataSource, UICollectio
             cell.imageView.image = image
         } else {
             // Use placeholder image while downloading
-            cell.imageView.image = UIImage(named: "")
+            // FIXME: This needs to have an actual placeholder image
+            cell.imageView.image = UIImage(systemName: "person")
             
             let fetchOperation = ImageFetchOperation(imageURL: url, networkManager: networkManager)
             let cacheOperation = BlockOperation {
@@ -146,7 +147,9 @@ extension ImageCollectionViewController: UICollectionViewDataSource, UICollectio
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let filterImageViewController = FilterImageViewController()
         let image = networkManager.getImage(url: imageURL[indexPath.item])
+        let originalImageURL = networkManager.originalImageURL[indexPath.item]
         filterImageViewController.imageView.image = image
+        filterImageViewController.imageURL = originalImageURL.url
         navigationController?.pushViewController(filterImageViewController, animated: true)
     }
 }

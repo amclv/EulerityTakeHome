@@ -25,8 +25,6 @@ extension URLSession {
 }
 
 extension NSMutableData {
-    /// Method to append a strings data using UTF8
-    /// - Parameter string: Passes a String
     func append(string: String) {
         if let data = string.data(using: .utf8) {
             self.append(data)

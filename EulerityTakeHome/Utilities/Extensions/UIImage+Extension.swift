@@ -1,14 +1,14 @@
 //
-//  UIImage+Extensions.swift
+//  UIImage+Extension.swift
 //  EulerityTakeHome
 //
-//  Created by Aaron Cleveland on 4/22/21.
+//  Created by Aaron Cleveland on 4/24/21.
 //
 
 import Foundation
 import UIKit
 
-enum FilterType: String {
+enum FilterType: String, CaseIterable {
     case sepia = "CISepiaTone"
     case mono = "CIPhotoEffectMono"
     case chrome = "CIPhotoEffectChrome"
@@ -18,6 +18,29 @@ enum FilterType: String {
     case process = "CIPhotoEffectProcess"
     case tonal = "CIPhotoEffectTonal"
     case transfer = "CIPhotoEffectTransfer"
+    
+    var names: String {
+        switch self {
+        case .sepia:
+            return "Sepia"
+        case .mono:
+            return "Mono"
+        case .chrome:
+            return "Chrome"
+        case .fade:
+            return "Fade"
+        case .instant:
+            return "Instant"
+        case .noir:
+            return "Noir"
+        case .process:
+            return "Process"
+        case .tonal:
+            return "Tonal"
+        case .transfer:
+            return "Transfer"
+        }
+    }
 }
 
 extension UIImage {
