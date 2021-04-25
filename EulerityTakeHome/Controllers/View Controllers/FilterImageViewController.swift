@@ -22,7 +22,18 @@ class FilterImageViewController: UIViewController {
     
     let networkManager = NetworkManager()
     
-    // MARK: - Labels -
+    var imageURL: URL?
+    var CIFilterNames = [
+        "CIPhotoEffectChrome",
+        "CIPhotoEffectFade",
+        "CIPhotoEffectInstant",
+        "CIPhotoEffectNoir",
+        "CIPhotoEffectProcess",
+        "CIPhotoEffectTonal",
+        "CIPhotoEffectTransfer",
+        "CISepiaTone"
+    ]
+    
     lazy var brightnessLabel = CustomLabel(style: .label, text: "Brightness")
     lazy var contrastLabel = CustomLabel(style: .label, text: "Contrast")
     lazy var saturationLabel = CustomLabel(style: .label, text: "Saturation")
@@ -30,13 +41,14 @@ class FilterImageViewController: UIViewController {
     lazy var contrastValueLabel = CustomLabel(style: .label, text: "\(contrastSlider.value)")
     lazy var saturationValueLabel = CustomLabel(style: .label, text: "\(saturationSlider.value)")
     
-    // MARK: - StackViews -
     lazy var sliderHStack = CustomStackView(style: .horizontal, distribution: .fillEqually, alignment: .fill)
     lazy var brightnessStack = CustomStackView(style: .vertical, distribution: .equalSpacing, alignment: .fill)
     lazy var contrastStack = CustomStackView(style: .vertical, distribution: .equalSpacing, alignment: .fill)
     lazy var saturationStack = CustomStackView(style: .vertical, distribution: .equalSpacing, alignment: .fill)
+    lazy var filterButtons = CustomStackView(style: .horizontal, distribution: .fillEqually, alignment: .fill)
     
-    // MARK: - ImageViews -
+    let textView = UITextView(frame: .zero)
+    
     lazy var imageTap: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         tap.numberOfTapsRequired = 1
@@ -51,7 +63,6 @@ class FilterImageViewController: UIViewController {
         return imageView
     }()
     
-    // MARK: - Sliders -
     lazy var brightnessSlider: UISlider = {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
@@ -103,37 +114,12 @@ class FilterImageViewController: UIViewController {
         return button
     }()
     
-    lazy var filterButtons: UIStackView = {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.distribution = .fillEqually
-        stack.alignment = .fill
-        stack.spacing = 16
-        return stack
-    }()
-    
-    let textView = UITextView(frame: .zero)
-    
     let filterScrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.showsHorizontalScrollIndicator = false
         return scroll
     }()
-    
-    var CIFilterNames = [
-        "CIPhotoEffectChrome",
-        "CIPhotoEffectFade",
-        "CIPhotoEffectInstant",
-        "CIPhotoEffectNoir",
-        "CIPhotoEffectProcess",
-        "CIPhotoEffectTonal",
-        "CIPhotoEffectTransfer",
-        "CISepiaTone"
-    ]
-    
-    var imageURL: URL?
     
     // MARK: - Lifecycle -
     override func viewDidLoad() {
@@ -161,6 +147,7 @@ class FilterImageViewController: UIViewController {
         brightnessStack.spacing = stackSpacing
         contrastStack.spacing = stackSpacing
         saturationStack.spacing = stackSpacing
+        filterButtons.spacing = stackSpacing
     }
     
     func delegates() {
@@ -340,8 +327,6 @@ extension FilterImageViewController {
         
     }
 }
-
-//extension FilterImageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {}
 
 extension FilterImageViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {

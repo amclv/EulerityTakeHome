@@ -12,7 +12,6 @@
 		1AA8C48A2632A4BB00AC4235 /* ImageFetchOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4892632A4BB00AC4235 /* ImageFetchOperation.swift */; };
 		1AA8C48D2632A7AB00AC4235 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C48C2632A7AB00AC4235 /* Extensions.swift */; };
 		1AA8C4902632AD0600AC4235 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C48F2632AD0600AC4235 /* Constants.swift */; };
-		1AA8C4A92634223D00AC4235 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4A82634223C00AC4235 /* UIImage+Extension.swift */; };
 		1AA8C4AD26352AFB00AC4235 /* FilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4AC26352AFA00AC4235 /* FilterCollectionViewCell.swift */; };
 		1AA8C4BC2635492A00AC4235 /* UIStackView+Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4BB2635492A00AC4235 /* UIStackView+Style.swift */; };
 		1AA8C4C026354CBE00AC4235 /* UILabel+Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4BF26354CBE00AC4235 /* UILabel+Style.swift */; };
@@ -33,7 +32,6 @@
 		1AA8C4892632A4BB00AC4235 /* ImageFetchOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFetchOperation.swift; sourceTree = "<group>"; };
 		1AA8C48C2632A7AB00AC4235 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1AA8C48F2632AD0600AC4235 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		1AA8C4A82634223C00AC4235 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		1AA8C4AC26352AFA00AC4235 /* FilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollectionViewCell.swift; sourceTree = "<group>"; };
 		1AA8C4BB2635492A00AC4235 /* UIStackView+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Style.swift"; sourceTree = "<group>"; };
 		1AA8C4BF26354CBE00AC4235 /* UILabel+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Style.swift"; sourceTree = "<group>"; };
@@ -65,7 +63,6 @@
 			isa = PBXGroup;
 			children = (
 				1AA8C48C2632A7AB00AC4235 /* Extensions.swift */,
-				1AA8C4A82634223C00AC4235 /* UIImage+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -253,7 +250,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AA8C4852632A38600AC4235 /* ConcurrentOperation.swift in Sources */,
-				1AA8C4A92634223D00AC4235 /* UIImage+Extension.swift in Sources */,
 				1AA8C4812632A2DC00AC4235 /* ImageCache.swift in Sources */,
 				1AB48EEF26313EE100F0D72F /* ImageCollectionViewController.swift in Sources */,
 				1AB48EEB2630E05D00F0D72F /* ImageCollectionViewCell.swift in Sources */,

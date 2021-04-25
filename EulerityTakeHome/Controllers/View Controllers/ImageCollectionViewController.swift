@@ -39,7 +39,6 @@ class ImageCollectionViewController: UIViewController {
         super.viewDidLoad()
         configUI()
         
-        // Set URLS array which reloads collectionView and starts image fetch operations
         networkManager.fetchImages { (result) in
             switch result {
             case .success(let imageObjects):
@@ -75,14 +74,12 @@ class ImageCollectionViewController: UIViewController {
 
 extension ImageCollectionViewController {
     private func constraints() {
-        let safe = view.safeAreaLayoutGuide
-        
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: safe.topAnchor, constant: standardPadding),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: standardPadding),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -standardPadding),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: standardPadding),
-            collectionView.bottomAnchor.constraint(equalTo: safe.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 }
@@ -101,8 +98,7 @@ extension ImageCollectionViewController: UICollectionViewDataSource, UICollectio
         if let image = networkManager.getImage(url: imageURL[indexPath.item]) {
             cell.imageView.image = image
         } else {
-            // Use placeholder image while downloading
-            // FIXME: This needs to have an actual placeholder image
+            // Used SF Symbols for the placeholder image while we wait for the photos to load
             cell.imageView.image = UIImage(systemName: "photo")
             
             let fetchOperation = ImageFetchOperation(imageURL: url, networkManager: networkManager)
@@ -138,7 +134,6 @@ extension ImageCollectionViewController: UICollectionViewDataSource, UICollectio
         return cell
     }
     
-    // Cancels image loading after user scrolls past it.
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let url = imageURL[indexPath.item]
         operations[url]?.cancel()
