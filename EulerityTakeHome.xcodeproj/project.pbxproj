@@ -13,6 +13,9 @@
 		1AA8C48D2632A7AB00AC4235 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C48C2632A7AB00AC4235 /* Extensions.swift */; };
 		1AA8C4902632AD0600AC4235 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C48F2632AD0600AC4235 /* Constants.swift */; };
 		1AA8C4A92634223D00AC4235 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4A82634223C00AC4235 /* UIImage+Extension.swift */; };
+		1AA8C4AD26352AFB00AC4235 /* FilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4AC26352AFA00AC4235 /* FilterCollectionViewCell.swift */; };
+		1AA8C4BC2635492A00AC4235 /* UIStackView+Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4BB2635492A00AC4235 /* UIStackView+Style.swift */; };
+		1AA8C4C026354CBE00AC4235 /* UILabel+Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8C4BF26354CBE00AC4235 /* UILabel+Style.swift */; };
 		1AB48ED62630A25700F0D72F /* FilterImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48ED52630A25700F0D72F /* FilterImageViewController.swift */; };
 		1AB48EDB2630A59E00F0D72F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48EDA2630A59E00F0D72F /* NetworkManager.swift */; };
 		1AB48EDE2630A81400F0D72F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB48EDD2630A81400F0D72F /* Image.swift */; };
@@ -31,6 +34,9 @@
 		1AA8C48C2632A7AB00AC4235 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1AA8C48F2632AD0600AC4235 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		1AA8C4A82634223C00AC4235 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		1AA8C4AC26352AFA00AC4235 /* FilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollectionViewCell.swift; sourceTree = "<group>"; };
+		1AA8C4BB2635492A00AC4235 /* UIStackView+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Style.swift"; sourceTree = "<group>"; };
+		1AA8C4BF26354CBE00AC4235 /* UILabel+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Style.swift"; sourceTree = "<group>"; };
 		1AB48ED52630A25700F0D72F /* FilterImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterImageViewController.swift; sourceTree = "<group>"; };
 		1AB48EDA2630A59E00F0D72F /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		1AB48EDD2630A81400F0D72F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -73,6 +79,15 @@
 			path = Operations;
 			sourceTree = "<group>";
 		};
+		1AA8C4BA2635492000AC4235 /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				1AA8C4BB2635492A00AC4235 /* UIStackView+Style.swift */,
+				1AA8C4BF26354CBE00AC4235 /* UILabel+Style.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
 		1AB48EE02630A82000F0D72F /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -112,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				1AB48EEA2630E05D00F0D72F /* ImageCollectionViewCell.swift */,
+				1AA8C4AC26352AFA00AC4235 /* FilterCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -119,6 +135,7 @@
 		1AB48EF126314B1E00F0D72F /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				1AA8C4BA2635492000AC4235 /* Styles */,
 				1AA8C47D26329EDF00AC4235 /* Extensions */,
 				1AA8C48F2632AD0600AC4235 /* Constants.swift */,
 			);
@@ -241,6 +258,9 @@
 				1AB48EEF26313EE100F0D72F /* ImageCollectionViewController.swift in Sources */,
 				1AB48EEB2630E05D00F0D72F /* ImageCollectionViewCell.swift in Sources */,
 				1AB48EDB2630A59E00F0D72F /* NetworkManager.swift in Sources */,
+				1AA8C4AD26352AFB00AC4235 /* FilterCollectionViewCell.swift in Sources */,
+				1AA8C4BC2635492A00AC4235 /* UIStackView+Style.swift in Sources */,
+				1AA8C4C026354CBE00AC4235 /* UILabel+Style.swift in Sources */,
 				1AFAF97326309FD700BD55C9 /* AppDelegate.swift in Sources */,
 				1AA8C48D2632A7AB00AC4235 /* Extensions.swift in Sources */,
 				1AFAF97526309FD700BD55C9 /* SceneDelegate.swift in Sources */,

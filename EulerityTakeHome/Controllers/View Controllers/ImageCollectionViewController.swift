@@ -103,7 +103,7 @@ extension ImageCollectionViewController: UICollectionViewDataSource, UICollectio
         } else {
             // Use placeholder image while downloading
             // FIXME: This needs to have an actual placeholder image
-            cell.imageView.image = UIImage(systemName: "person")
+            cell.imageView.image = UIImage(systemName: "photo")
             
             let fetchOperation = ImageFetchOperation(imageURL: url, networkManager: networkManager)
             let cacheOperation = BlockOperation {
@@ -148,8 +148,8 @@ extension ImageCollectionViewController: UICollectionViewDataSource, UICollectio
         let filterImageViewController = FilterImageViewController()
         let image = networkManager.getImage(url: imageURL[indexPath.item])
         let originalImageURL = networkManager.originalImageURL[indexPath.item]
-        filterImageViewController.imageView.image = image
-        filterImageViewController.imageURL = originalImageURL.url
+        filterImageViewController.originalImageView.image = image
+//        filterImageViewController.imageURL = originalImageURL.url
         navigationController?.pushViewController(filterImageViewController, animated: true)
     }
 }
