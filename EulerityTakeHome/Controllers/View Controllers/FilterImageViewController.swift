@@ -122,8 +122,8 @@ class FilterImageViewController: UIViewController, UINavigationControllerDelegat
         return scroll
     }()
     
-    let textLabel: DraggableLabel = {
-        let label = DraggableLabel(frame: .zero)
+    let textLabel: UILabel = {
+        let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isUserInteractionEnabled = true
         return label
@@ -225,62 +225,24 @@ class FilterImageViewController: UIViewController, UINavigationControllerDelegat
         }
     }
     
-    @objc func drawTextOnImages() {
+    @objc func drawTextOnImages(sender: UITapGestureRecognizer) {
         textLabel.text = textField.text
         guard let imageView = originalImageView,
-              let userTouch = userTouch,
-              let image = imageView.image else { return }
-        
+              let userTouch = userTouch else { return }
+
         guard let text = textLabel.text,
               !text.isEmpty else { return }
-        
+
         guard imageView.bounds.contains(userTouch) else { return }
-        
-        let imgScaleWidth = image.size.width / imageView.bounds.width
-        let imgScaleHeight = image.size.height / imageView.bounds.height
-        
-        let font = UIFont.systemFont(ofSize: 72 * imgScaleWidth)
-        let textAttributes = [NSAttributedString.Key.font: font]
-        let attributedText = NSAttributedString(string: text, attributes: textAttributes)
-        
-        let imageWidth = image.size.width
-        let imageHeight = image.size.height
-        
-        let textSize = attributedText.size()
-        
-        let maxWidth = textSize.width < imageWidth ? textSize.width : imageWidth
-        let maxHeight = textSize.height < imageHeight ? textSize.height : imageHeight
-        
-        let estimatedSize = CGSize(width: maxWidth, height: maxHeight)
-        let estimatedTextRect = text.boundingRect(with: estimatedSize, options: .usesLineFragmentOrigin, context: nil)
-        
-        let imgRect = CGRect(x: 0,
-                             y: 0,
-                             width: image.size.width,
-                             height: image.size.height)
-        
-        UIGraphicsBeginImageContext(image.size)
-        let textRect = CGRect(x: (userTouch.x * image.scale) - (estimatedTextRect.width / 2),
-                              y: (userTouch.y * image.scale) - (estimatedTextRect.height / 2),
-                              width: estimatedTextRect.width,
-                              height: estimatedTextRect.height)
-        image.draw(in: imgRect)
-        attributedText.draw(in: textRect)
-        addBlueBox(to: textRect)
-        
-        
-        let renderedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        photoEdited = true
-        originalImageView.image = renderedImage
+        textToImage(drawText: text, atPoint: userTouch)
     }
     
-    func addBlueBox(to frame: CGRect) {
-        let view = UIView()
-        view.frame = frame.integral
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.blue.cgColor
-        originalImageView.addSubview(view)
+    func textToImage(drawText text: String, atPoint point: CGPoint) {
+        textLabel.frame = CGRect(x: point.x, y: point.y, width: 200.0, height: 20)
+        textLabel.textAlignment = .left
+        textLabel.text = text as String
+        textLabel.textColor = UIColor.black
+        originalImageView.addSubview(textLabel)
     }
     
     // MARK: - Actions -
