@@ -25,7 +25,7 @@ class ImageCollectionViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         
         // Switch to estimateItemSize if we want a dynamic height
-        layout.itemSize = CGSize(width: 150, height: 150)
+        layout.itemSize = CGSize(width: 100, height: 125)
         layout.scrollDirection = .vertical
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
