@@ -8,7 +8,7 @@
 import UIKit
 import CoreImage
 
-class FilterImageViewController: UIViewController {
+class FilterImageViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate {
     
     // MARK: - Properties -
     let sliderSize: CGFloat = 200
@@ -18,7 +18,6 @@ class FilterImageViewController: UIViewController {
     var ciImage = CIImage();
     var context = CIContext();
     var outputImage = CIImage();
-    var newUIImage = UIImage();
     
     let networkManager = NetworkManager()
     
@@ -47,19 +46,21 @@ class FilterImageViewController: UIViewController {
     lazy var saturationStack = CustomStackView(style: .vertical, distribution: .equalSpacing, alignment: .fill)
     lazy var filterButtons = CustomStackView(style: .horizontal, distribution: .fillEqually, alignment: .fill)
     
-    let textView = UITextView(frame: .zero)
-    
     lazy var imageTap: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(drawTextOnImages))
         tap.numberOfTapsRequired = 1
         tap.numberOfTouchesRequired = 1
         return tap
     }()
     
-    lazy var originalImageView: UIImageView = {
+    var filteredImage: UIImage?
+    
+    lazy var originalImageView: UIImageView! = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(imageTap)
         return imageView
     }()
     
@@ -105,12 +106,12 @@ class FilterImageViewController: UIViewController {
     lazy var presetFilterButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Preset Filter", for: .normal)
+        button.setTitle("Add Text To Image", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemTeal
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
         button.layer.cornerRadius = 20
-//        button.addTarget(self, action: #selector(presetFilterAction), for: .touchUpInside)
+        button.addTarget(self, action: #selector(imageTapped), for: .touchUpInside)
         return button
     }()
     
@@ -119,6 +120,20 @@ class FilterImageViewController: UIViewController {
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.showsHorizontalScrollIndicator = false
         return scroll
+    }()
+    
+    let textLabel: DraggableLabel = {
+        let label = DraggableLabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isUserInteractionEnabled = true
+        return label
+    }()
+    
+    let textField: UITextField = {
+        let textView = UITextField()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.placeholder = "Please enter your text here and click on image"
+        return textView
     }()
     
     // MARK: - Lifecycle -
@@ -131,15 +146,11 @@ class FilterImageViewController: UIViewController {
         context = CIContext(options: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        configureScrollView()
-    }
-    
     // MARK: - Helper Functions -
     func configureUI() {
         constraints()
         delegates()
+        configureScrollView()
         view.backgroundColor = .white
         navigationItem.title = "Edit Image"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Upload", style: .plain, target: self, action: #selector(saveImage))
@@ -151,13 +162,13 @@ class FilterImageViewController: UIViewController {
     }
     
     func delegates() {
-        textView.delegate = self
+        textField.delegate = self
     }
     
     func configureScrollView() {
-        var x: CGFloat = 5
-        let y: CGFloat = 5
-        let buttonWidth: CGFloat = 70
+        var x: CGFloat = 10
+        let y: CGFloat = 10
+        let buttonWidth: CGFloat = 80
         let buttonHeight: CGFloat = 70
         let gapBetweenButtons: CGFloat = 5
         
@@ -173,7 +184,7 @@ class FilterImageViewController: UIViewController {
             filterButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
             filterButton.layer.cornerRadius = 6
             filterButton.clipsToBounds = true
-            filterButton.contentMode = .scaleToFill
+            filterButton.contentMode = .scaleAspectFit
             
             let ciContext = CIContext(options: nil)
             let coreImage = CIImage(image: originalImageView.image!)
@@ -198,8 +209,78 @@ class FilterImageViewController: UIViewController {
         outputImage = filter.outputImage!
         
         let imageRef = context.createCGImage(outputImage, from: outputImage.extent)
-        newUIImage = UIImage(cgImage: imageRef!)
-        originalImageView.image = newUIImage
+        filteredImage = UIImage(cgImage: imageRef!)
+        originalImageView.image = filteredImage
+    }
+    
+    var photoEdited = false
+    
+    var userTouch: CGPoint?
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let position = touch.location(in: originalImageView)
+            userTouch = position
+            print(userTouch)
+        }
+    }
+    
+    @objc func drawTextOnImages() {
+        textLabel.text = textField.text
+        guard let imageView = originalImageView,
+              let userTouch = userTouch,
+              let image = imageView.image else { return }
+        
+        guard let text = textLabel.text,
+              !text.isEmpty else { return }
+        
+        guard imageView.bounds.contains(userTouch) else { return }
+        
+        let imgScaleWidth = image.size.width / imageView.bounds.width
+        let imgScaleHeight = image.size.height / imageView.bounds.height
+        
+        let font = UIFont.systemFont(ofSize: 72 * imgScaleWidth)
+        let textAttributes = [NSAttributedString.Key.font: font]
+        let attributedText = NSAttributedString(string: text, attributes: textAttributes)
+        
+        let imageWidth = image.size.width
+        let imageHeight = image.size.height
+        
+        let textSize = attributedText.size()
+        
+        let maxWidth = textSize.width < imageWidth ? textSize.width : imageWidth
+        let maxHeight = textSize.height < imageHeight ? textSize.height : imageHeight
+        
+        let estimatedSize = CGSize(width: maxWidth, height: maxHeight)
+        let estimatedTextRect = text.boundingRect(with: estimatedSize, options: .usesLineFragmentOrigin, context: nil)
+        
+        let imgRect = CGRect(x: 0,
+                             y: 0,
+                             width: image.size.width,
+                             height: image.size.height)
+        
+        UIGraphicsBeginImageContext(image.size)
+        let textRect = CGRect(x: (userTouch.x * image.scale) - (estimatedTextRect.width / 2),
+                              y: (userTouch.y * image.scale) - (estimatedTextRect.height / 2),
+                              width: estimatedTextRect.width,
+                              height: estimatedTextRect.height)
+        image.draw(in: imgRect)
+        attributedText.draw(in: textRect)
+        addBlueBox(to: textRect)
+        
+        
+        let renderedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        photoEdited = true
+        originalImageView.image = renderedImage
+    }
+    
+    func addBlueBox(to frame: CGRect) {
+        let view = UIView()
+        view.frame = frame.integral
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.blue.cgColor
+        originalImageView.addSubview(view)
     }
     
     // MARK: - Actions -
@@ -240,42 +321,37 @@ class FilterImageViewController: UIViewController {
     }
     
     @objc func imageTapped() {
-//        let alertController = UIAlertController(title: "Enter Text \n\n\n\n", message: nil, preferredStyle: .alert)
-//
-//        let cancelAction = UIAlertAction.init(title: "Cancel", style: .default) { (action) in
-//            alertController.view.removeObserver(self, forKeyPath: "bounds")
-//        }
-//        alertController.addAction(cancelAction)
-//
-//        let saveAction = UIAlertAction(title: "Submit", style: .default) { (action) in
-//            let entertedText = self.textView.text
-//            //            self.addTextToImage(text: entertedText)
-//            alertController.view.removeObserver(self, forKeyPath: "bounds")
-//        }
-//        alertController.addAction(saveAction)
-//
-//        alertController.view.addObserver(self, forKeyPath: "bounds", options: NSKeyValueObservingOptions.new, context: nil)
-//
-//        textView.backgroundColor = UIColor.lightGray
-//        textView.textContainerInset = UIEdgeInsets.init(top: 8, left: 8, bottom: 8, right: 8)
-//        alertController.view.addSubview(self.textView)
-//
-//        self.present(alertController, animated: true, completion: nil)
+        let alertController = UIAlertController(title: "Enter Text \n\n\n\n", message: nil, preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction.init(title: "Cancel", style: .default) { (action) in
+            alertController.view.removeObserver(self, forKeyPath: "bounds")
+        }
+        alertController.addAction(cancelAction)
+
+        let saveAction = UIAlertAction(title: "Submit", style: .default) { (action) in
+            self.textLabel.text = self.textField.text
+            alertController.view.removeObserver(self, forKeyPath: "bounds")
+        }
+        alertController.addAction(saveAction)
+
+        alertController.view.addObserver(self, forKeyPath: "bounds", options: NSKeyValueObservingOptions.new, context: nil)
+        alertController.view.addSubview(self.textField)
+        self.present(alertController, animated: true, completion: nil)
     }
     
-//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-//        if keyPath == "bounds"{
-//            if let rect = (change?[NSKeyValueChangeKey.newKey] as? NSValue)?.cgRectValue {
-//                let margin: CGFloat = 8
-//                let xPos = rect.origin.x + margin
-//                let yPos = rect.origin.y + 54
-//                let width = rect.width - 2 * margin
-//                let height: CGFloat = 90
-//
-//                textView.frame = CGRect.init(x: xPos, y: yPos, width: width, height: height)
-//            }
-//        }
-//    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "bounds"{
+            if let rect = (change?[NSKeyValueChangeKey.newKey] as? NSValue)?.cgRectValue {
+                let margin: CGFloat = 8
+                let xPos = rect.origin.x + margin
+                let yPos = rect.origin.y + 54
+                let width = rect.width - 2 * margin
+                let height: CGFloat = 90
+
+                textField.frame = CGRect.init(x: xPos, y: yPos, width: width, height: height)
+            }
+        }
+    }
 }
 
 // MARK: - Extensions -
@@ -286,7 +362,7 @@ extension FilterImageViewController {
             originalImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: standardPadding),
             originalImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             originalImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            originalImageView.heightAnchor.constraint(equalToConstant: view.frame.height / 3),
+            originalImageView.heightAnchor.constraint(equalToConstant: view.frame.height / 4),
             originalImageView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
         
@@ -296,6 +372,14 @@ extension FilterImageViewController {
             filterScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             filterScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             filterScrollView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+        
+        view.addSubview(textField)
+        NSLayoutConstraint.activate([
+            textField.topAnchor.constraint(equalTo: filterScrollView.bottomAnchor, constant: standardPadding),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: standardPadding),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -standardPadding),
+            textField.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         brightnessStack.addArrangedSubview(brightnessValueLabel)

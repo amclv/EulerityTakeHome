@@ -11,7 +11,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     
     static var identifier: String = "ImageCollectionViewCell"
     
-    let imageSize: CGFloat = 150
+    let imageSize: CGFloat = 100
     
     let imageView: UIImageView = {
         let imageView = UIImageView()
