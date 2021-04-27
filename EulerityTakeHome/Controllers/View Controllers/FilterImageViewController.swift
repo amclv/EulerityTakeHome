@@ -111,7 +111,6 @@ class FilterImageViewController: UIViewController, UINavigationControllerDelegat
         button.backgroundColor = .systemTeal
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
         button.layer.cornerRadius = 20
-        button.addTarget(self, action: #selector(imageTapped), for: .touchUpInside)
         return button
     }()
     
@@ -120,13 +119,6 @@ class FilterImageViewController: UIViewController, UINavigationControllerDelegat
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.showsHorizontalScrollIndicator = false
         return scroll
-    }()
-    
-    let textLabel: UILabel = {
-        let label = UILabel(frame: .zero)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.isUserInteractionEnabled = true
-        return label
     }()
     
     let textField: UITextField = {
@@ -226,22 +218,38 @@ class FilterImageViewController: UIViewController, UINavigationControllerDelegat
     }
     
     @objc func drawTextOnImages(sender: UITapGestureRecognizer) {
-        textLabel.text = textField.text
         guard let imageView = originalImageView,
               let userTouch = userTouch else { return }
-
-        guard let text = textLabel.text,
+        
+        guard let text = textField.text,
               !text.isEmpty else { return }
-
+        
         guard imageView.bounds.contains(userTouch) else { return }
-        textToImage(drawText: text, atPoint: userTouch)
+        
+        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, 0.0)
+        
+        // Add object method for things you want to add to image
+        textToImage(atPoint: userTouch, text: text, textSizeWidth: 100, textSizeHeight: 100)
+        
+        // Render image by given context
+        imageView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        
+        let renderedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        imageView.image = renderedImage
     }
     
-    func textToImage(drawText text: String, atPoint point: CGPoint) {
-        textLabel.frame = CGRect(x: point.x, y: point.y, width: 200.0, height: 20)
-        textLabel.textAlignment = .left
-        textLabel.text = text as String
+    func textToImage(atPoint point: CGPoint, text: String, textSizeWidth: CGFloat, textSizeHeight: CGFloat) {
+        let textLabel = DraggableLabel()
+        textLabel.frame = CGRect(x: point.x,
+                                 y: point.y,
+                                 width: textSizeWidth,
+                                 height: textSizeHeight)
+        textLabel.textAlignment = .center
         textLabel.textColor = UIColor.black
+        
+        textLabel.text = text
         originalImageView.addSubview(textLabel)
     }
     
@@ -281,39 +289,6 @@ class FilterImageViewController: UIViewController, UINavigationControllerDelegat
         let button = sender as UIButton
         originalImageView.image = button.backgroundImage(for: .normal)
     }
-    
-    @objc func imageTapped() {
-        let alertController = UIAlertController(title: "Enter Text \n\n\n\n", message: nil, preferredStyle: .alert)
-        
-        let cancelAction = UIAlertAction.init(title: "Cancel", style: .default) { (action) in
-            alertController.view.removeObserver(self, forKeyPath: "bounds")
-        }
-        alertController.addAction(cancelAction)
-
-        let saveAction = UIAlertAction(title: "Submit", style: .default) { (action) in
-            self.textLabel.text = self.textField.text
-            alertController.view.removeObserver(self, forKeyPath: "bounds")
-        }
-        alertController.addAction(saveAction)
-
-        alertController.view.addObserver(self, forKeyPath: "bounds", options: NSKeyValueObservingOptions.new, context: nil)
-        alertController.view.addSubview(self.textField)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "bounds"{
-            if let rect = (change?[NSKeyValueChangeKey.newKey] as? NSValue)?.cgRectValue {
-                let margin: CGFloat = 8
-                let xPos = rect.origin.x + margin
-                let yPos = rect.origin.y + 54
-                let width = rect.width - 2 * margin
-                let height: CGFloat = 90
-
-                textField.frame = CGRect.init(x: xPos, y: yPos, width: width, height: height)
-            }
-        }
-    }
 }
 
 // MARK: - Extensions -
@@ -321,10 +296,10 @@ extension FilterImageViewController {
     private func constraints() {
         view.addSubview(originalImageView)
         NSLayoutConstraint.activate([
-            originalImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: standardPadding),
+            originalImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             originalImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             originalImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            originalImageView.heightAnchor.constraint(equalToConstant: view.frame.height / 4),
+            originalImageView.heightAnchor.constraint(equalToConstant: view.frame.height / 2.5),
             originalImageView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
         
